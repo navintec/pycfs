@@ -1,0 +1,43 @@
+#!/usr/bin/env python
+
+from __future__ import print_function
+
+import os
+import sys
+import glob
+import argparse
+
+from IPython import embed
+
+import pycfs
+
+from pycfs.serialization import CStruct,CommandFactory,TelemetryFactory
+from pycfs.commander import UDPCommander
+from pycfs.listener import UDPListener
+
+def main():
+
+    parser = argparse.ArgumentParser(description="cFS Shell")
+    parser.add_argument('-p','--path',metavar='BUNDLE_PATH',type=str,
+            default=None,
+            help="The path to the cFS bundle. (default: current directory)")
+    parser.add_argument('-m','--mission',metavar='MISSION',type=str,
+            default=None,
+            help="The mission name (default: $MISSIONCONFIG)")
+    parser.add_argument('-t','--target',metavar='TARGET',type=str,
+            default=None,
+            help="The path to the desired target. (default: none)")
+    parser.add_argument('-n','--no-cache',action='store_true',
+            help="Disable use of the cache.")
+    parser.add_argument('apps',metavar='APP',type=str,nargs='+',
+            help="The name of an app to get messages from.")
+
+    args = parser.parse_args()
+
+    MID,CC,MSG,cparser = pycfs.load_bundle(args.path, args.mission,
+            args.target, args.apps, use_cache=(not args.no_cache))
+
+    embed()
+
+if __name__ == '__main__':
+    main()
