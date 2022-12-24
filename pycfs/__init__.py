@@ -160,16 +160,16 @@ def load_bundle(bundle_path, mission, target, apps, verbose=False, use_cache=Fal
             headers.append(path)
             break
 
-    headers.append(os.path.join(bundle_path,'cfe','fsw','cfe-core','src','inc','cfe_es_extern_typedefs.h'))
-    headers.append(os.path.join(bundle_path,'cfe','fsw','cfe-core','src','inc','cfe_evs_extern_typedefs.h'))
-    headers.append(os.path.join(bundle_path,'cfe','fsw','cfe-core','src','inc','cfe_tbl_extern_typedefs.h'))
-    headers.append(os.path.join(bundle_path,'cfe','fsw','cfe-core','src','inc','cfe_sb_extern_typedefs.h'))
-    headers.append(os.path.join(bundle_path,'cfe','fsw','cfe-core','src','inc','cfe_sb.h'))
+    headers.append(os.path.join(bundle_path,'cfe','modules','core_api','fsw','inc','cfe_es_extern_typedefs.h'))
+    headers.append(os.path.join(bundle_path,'cfe','modules','core_api','fsw','inc','cfe_evs_extern_typedefs.h'))
+    headers.append(os.path.join(bundle_path,'cfe','modules','core_api','fsw','inc','cfe_tbl_extern_typedefs.h'))
+    headers.append(os.path.join(bundle_path,'cfe','modules','core_api','fsw','inc','cfe_sb_extern_typedefs.h'))
+    headers.append(os.path.join(bundle_path,'cfe','modules','core_api','fsw','inc','cfe_sb.h'))
 
     # Get app headers
     search_paths = (
             [os.path.join(bundle_path,'apps',app,'fsw') for app in apps] +
-            [os.path.join(bundle_path,'cfe','fsw')])
+            [os.path.join(bundle_path,'cfe','modules')])
     for path in search_paths:
         for root, dirs, files in os.walk(path):
             for filename in files:
@@ -202,8 +202,10 @@ def load_bundle(bundle_path, mission, target, apps, verbose=False, use_cache=Fal
             +['-I',os.path.join(bundle_path,'osal','src','os','inc')]
             +['-I',os.path.join(bundle_path,'osal','ut_assert','inc')]
             +['-I',os.path.join(bundle_path,'cfe','cmake','target','inc')]
-            +['-I',os.path.join(bundle_path,'cfe','fsw','cfe-core','src','inc')]
-            +['-I',os.path.join(bundle_path,'build',mission,'inc')]
+            +['-I',os.path.join(bundle_path,'cfe','modules','core_api','fsw','inc')]
+            +['-I',os.path.join(bundle_path,'cfe','modules','msg','fsw','inc')]
+            +['-I',os.path.join(bundle_path,'build','inc')]
+            +['-I',os.path.join(bundle_path,'build','native','default_cpu1','inc')]   # Hacky Fix. Pls change this line to be compatible across targets.
             +['-I',mission_dir])
 
     # For each header, run `gcc -E` to get preproc output (processing #include
